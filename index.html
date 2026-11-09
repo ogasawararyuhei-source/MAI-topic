@@ -70,6 +70,13 @@ a{color:var(--accent)}button{font:inherit;cursor:pointer}
 .src{font-size:11px;color:var(--muted);word-break:break-all}
 .empty{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;padding:24px;color:var(--muted)}
 .empty .big{font-size:34px;color:var(--accent2)}
+
+.arrownav{position:absolute;top:50%;transform:translateY(-50%);z-index:5;width:38px;height:38px;border-radius:50%;border:1.5px solid var(--line);background:var(--soft);color:var(--accent);font-size:19px;line-height:1;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);opacity:.92}
+.arrownav:active{transform:translateY(-50%) scale(.93)}
+.arrownav.left{left:6px}.arrownav.right{right:6px}
+.downrow{flex:none;display:flex;justify-content:center;padding-top:8px}
+.arrowdown{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--line);background:var(--soft);color:var(--accent);font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);animation:bob 1.8s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
 .pager{flex:none;display:flex;align-items:center;gap:10px;margin-top:10px}
 .pager .navbtn{flex:1}
 .artdots{flex:none;display:flex;gap:5px;max-width:34vw;flex-wrap:wrap;justify-content:center}
@@ -118,9 +125,10 @@ label.fl{display:block;font-weight:800;font-size:14px;margin:10px 0 4px}
 
 <div class="catbar"><div class="catinfo"><h2 id="catName"></h2><p id="catDesc"></p></div><span class="catcount" id="catCount"></span></div>
 
-<section class="stage" id="stage" aria-live="polite"><div id="cardSlot"></div></section>
+<section class="stage" id="stage" aria-live="polite"><div id="cardSlot"></div><button class="arrownav left" id="arrowPrev" aria-label="前の記事">‹</button><button class="arrownav right" id="arrowNext" aria-label="次の記事">›</button></section>
 
 <div class="pager"><div class="artdots" id="artDots"></div><span class="artcount" id="artCount"></span></div>
+<div class="downrow"><button class="arrowdown" id="arrowDown" aria-label="次のジャンル">⌄</button></div>
 <div class="addcat"><button id="addCatBtn">＋ 項目（ジャンル）を追加する</button></div>
 </main>
 
@@ -308,6 +316,9 @@ function fitCard(){
   }
 }
 window.addEventListener('resize', fitCard);
+document.getElementById('arrowPrev').onclick=prevArt;
+document.getElementById('arrowNext').onclick=nextArt;
+document.getElementById('arrowDown').onclick=nextCat;
 function nextArt(){const n=curItems().length;if(!n)return;artIdxMap[curCat().id]=(curArtIdx()+1)%n;renderStage('next')}
 function prevArt(){const n=curItems().length;if(!n)return;artIdxMap[curCat().id]=(curArtIdx()-1+n)%n;renderStage('prev')}
 function nextCat(){catIdx=(catIdx+1)%cats.length;renderStage('down')}
