@@ -1,0 +1,19 @@
+{
+  "name": "児童文学・絵本 topic",
+  "short_name": "絵本topic",
+  "description": "児童文学賞・絵本原作の投稿情報などを毎朝まとめるページ",
+  "lang": "ja",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#e3dfc6",
+  "theme_color": "#17351f",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
