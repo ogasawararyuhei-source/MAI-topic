@@ -225,15 +225,21 @@ let memos={};
 let curCat=0, curArt=0;
 
 function shortAwardName(title){ return title.split('\u2014')[0].split('\uFF08')[0].replace(/^\u7B2C\d+\u56DE\s*/,'').replace(/\s*20\d\d\s*$/,'').replace('こどものとも創刊70周年記念','こどものとも').trim().slice(0,20); }
+const SAVED_KEY='ehonSavedCal';
+function savedSet(){ try{ return new Set(JSON.parse(localStorage.getItem(SAVED_KEY)||'[]')); }catch(e){ return new Set(); } }
+function storeSaved(st){ try{ localStorage.setItem(SAVED_KEY, JSON.stringify([...st])); }catch(e){} }
+function markSaved(id){ const st=savedSet(); if(!st.has(id)){ st.add(id); storeSaved(st); } }
 function allDeadlines(){
   const seen=new Set(); const list=[];
-  categories.forEach(c=>c.articles.forEach(a=>{ if(a.deadline && !seen.has(a.deadline)){ const d=daysUntil(a.deadline); if(d!==null && d>=0){ seen.add(a.deadline); list.push({title:a.title,short:shortAwardName(a.title),deadline:a.deadline,days:d}); } }}));
+  categories.forEach(c=>c.articles.forEach(a=>{ if(a.deadline && !seen.has(a.id)){ const d=daysUntil(a.deadline); if(d!==null && d>=0){ seen.add(a.id); list.push({id:a.id,title:a.title,short:shortAwardName(a.title),deadline:a.deadline,days:d}); } }}));
   return list.sort((x,y)=>x.days-y.days);
 }
 function renderCountdown(){
 const bar=document.getElementById('countdownBar');
-const list=allDeadlines().slice(0,6);
-if(!list.length){ bar.innerHTML='<span>締切が近い賞はありません</span>'; return;}
+const st=savedSet();
+const list=allDeadlines().filter(x=>st.has(x.id)).slice(0,6);
+if(!list.length){ bar.innerHTML=''; bar.style.display='none'; return;}
+bar.style.display='';
 bar.innerHTML=list.map(x=>{ const cls=x.days<=10?'urgent':''; return '<span class="'+cls+'">\u{1F3C6} '+escapeHtml(x.short)+'\u307E\u3067 <b>\u3042\u3068'+x.days+'\u65E5</b></span>'; }).join('');
 }
 function escapeHtml(s){ return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
@@ -248,7 +254,7 @@ document.getElementById('cardMeta').innerHTML='<span class="badge">'+escapeHtml(
 document.getElementById('cardTitle').textContent=a.title;
 document.getElementById('cardSummary').textContent=a.summary;
 document.getElementById('sourceBtn').href=a.source;
-document.getElementById('calBtn').style.display=a.deadline?'':'none';
+document.getElementById('calBtn').style.display=a.deadline?'':'none'; document.getElementById('calBtn').textContent=savedSet().has(a.id)?'📅 保存済み ✓':'📅 カレンダーに保存';
 document.getElementById('catName').textContent=cat.name;
 document.getElementById('posLabel').textContent=(curArt+1)+' / '+cat.articles.length+' 件 ・ ジャンル '+(curCat+1)+' / '+categories.length;
 
@@ -282,7 +288,7 @@ function goCat(dir){ const next=curCat+dir; if(next<0||next>=categories.length) 
 document.getElementById('addCatBtn').onclick=()=>document.getElementById('addModal').classList.add('open');
 document.getElementById('detailBtn').onclick=openDetail;
 document.getElementById('memoBtn').onclick=openDetail;
-document.getElementById('calBtn').onclick=()=>{ const a=current(); if(a.deadline) window.open(gcalUrl(a),'_blank');};
+document.getElementById('calBtn').onclick=()=>{ const a=current(); if(!a.deadline) return; const st=savedSet(); if(st.has(a.id)){ st.delete(a.id); storeSaved(st); render(); } else { window.open(gcalUrl(a),'_blank'); markSaved(a.id); render(); } };
 document.getElementById('shareBtn').onclick=shareCurrent;
 document.getElementById('detailShare').onclick=shareCurrent;
 async function shareCurrent(){ const a=current(); const data={title:a.title,text:a.title+'\n'+a.summary,url:a.source}; if(navigator.share){ try{ await navigator.share(data);}catch(e){}} else if(navigator.clipboard){ await navigator.clipboard.writeText(a.title+' '+a.source); const tt=document.getElementById('toast'); tt.classList.add('show'); setTimeout(()=>tt.classList.remove('show'),1800);}}
@@ -293,7 +299,7 @@ document.getElementById('detailTitle').textContent=a.title;
 document.getElementById('detailImg').src=cat.img;
 document.getElementById('detailBody').textContent=a.body;
 document.getElementById('detailSource').href=a.source;
-const cal=document.getElementById('detailCal'); if(a.deadline){ cal.style.display=''; cal.href=gcalUrl(a);} else cal.style.display='none';
+const cal=document.getElementById('detailCal'); if(a.deadline){ cal.style.display=''; cal.href=gcalUrl(a); cal.onclick=()=>{ markSaved(a.id); setTimeout(renderCountdown,50); };} else cal.style.display='none';
 document.getElementById('memoText').value='';
 renderMemos();
 document.getElementById('detailModal').classList.add('open');
