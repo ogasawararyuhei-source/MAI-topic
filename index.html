@@ -311,10 +311,10 @@ function fitCard(){
   }
 }
 window.addEventListener('resize', fitCard);
-function nextArt(){const n=curItems().length;if(!n)return;artIdxMap[curCat().id]=(curArtIdx()+1)%n;renderStage('next')}
-function prevArt(){const n=curItems().length;if(!n)return;artIdxMap[curCat().id]=(curArtIdx()-1+n)%n;renderStage('prev')}
-function nextCat(){catIdx=(catIdx+1)%cats.length;renderStage('down')}
-function prevCat(){catIdx=(catIdx-1+cats.length)%cats.length;renderStage('up')}
+function nextArt(){const n=curItems().length;if(!n)return;const i=curArtIdx();if(i>=n-1)return;artIdxMap[curCat().id]=i+1;renderStage('next')}
+function prevArt(){const n=curItems().length;if(!n)return;const i=curArtIdx();if(i<=0)return;artIdxMap[curCat().id]=i-1;renderStage('prev')}
+function nextCat(){if(catIdx>=cats.length-1)return;catIdx++;renderStage('down')}
+function prevCat(){if(catIdx<=0)return;catIdx--;renderStage('up')}
 /* ===== スワイプ操作（スクロールではなくスワイプで移動） ===== */
 const stage=document.getElementById('stage');
 let sx=null, sy=null, swipedAt=0;
