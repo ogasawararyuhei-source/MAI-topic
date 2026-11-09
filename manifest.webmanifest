@@ -1,1 +1,19 @@
-{"background_color":"#e6d7b8","description":"毎朝届く11ジャンルの情報まとめ（AIニュース、GitHub、電子工作、CNC、UVプリンター、子どもの健康・発達など）","display":"standalone","icons":[{"purpose":"any","sizes":"any","src":"icon.svg","type":"image/svg+xml"}],"lang":"ja","name":"MAI topic","scope":".","short_name":"MAI topic","start_url":".","theme_color":"#2a1a0c"}
+{
+  "background_color": "#e3dfc6",
+  "description": "毎朝届く11ジャンルの情報まとめ（AIニュース、GitHub、電子工作、CNC、UVプリンター、子どもの健康・発達など）",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "lang": "ja",
+  "name": "MAI topic",
+  "scope": ".",
+  "short_name": "MAI topic",
+  "start_url": ".",
+  "theme_color": "#17351f"
+}
