@@ -270,7 +270,7 @@ function saveMemo(cat,idx){const a=DATA[cat][idx];const note=document.getElement
 function updateMemoUI(){document.getElementById('memoCount').textContent=memos.length;const area=document.getElementById('memoList');
 if(!memos.length){area.innerHTML='<p class="sum">まだメモがありません。記事の「メモ保存」をタップしてください。</p>';return}
 area.innerHTML=memos.map(m=>`<div class="memoItem"><b style="font-size:14px">${m.title}</b><div style="font-size:13px;color:var(--muted)">${m.note||"（ひとことメモなし）"} ・ ${m.date}</div></div>`).join('')}
-function exportMemos(){if(!memos.length){toast("まだメモがありません");return}const txt="MAI topic メモ — 2026-11-09\n\n"+memos.map((m,i)=>`${i+1}. ${m.title}\n${m.note||""}\n`).join("\n");const b=new Blob([txt],{type:"text/plain"});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download="mai-topic-memo-2026-11-09.txt";a.click();URL.revokeObjectURL(u)}
+function exportMemos(){if(!memos.length){toast("まだメモがありません");return}const txt="MAI topic メモ — 2026-11-10\n\n"+memos.map((m,i)=>`${i+1}. ${m.title}\n${m.note||""}\n`).join("\n");const b=new Blob([txt],{type:"text/plain"});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download="mai-topic-memo-2026-11-10.txt";a.click();URL.revokeObjectURL(u)}
 async function shareText(title,text){if(navigator.share){try{await navigator.share({title,text});return}catch(e){}} try{await navigator.clipboard.writeText(text);toast("コピーしました — メモアプリなどに貼り付けできます")}catch(e){toast("共有できませんでした")}}
 function shareArticle(cat,idx){const a=DATA[cat][idx];shareText(a[0],`${a[0]}\n\n${a[1]}\n\n出典：${a[4]} ${a[5]}`)}
 function shareMemos(){if(!memos.length){toast("まだメモがありません");return}shareText("MAI topic メモ",memos.map(m=>`・${m.title} ${m.note}`).join("\n"))}
