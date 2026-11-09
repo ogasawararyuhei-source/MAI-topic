@@ -59,7 +59,7 @@ a{color:var(--accent)}button{font:inherit;cursor:pointer}
 [data-theme="dnd"] .card .ph{filter:sepia(.25) saturate(1.1)}
 [data-theme="celtic"] .card .ph{filter:saturate(1.05) hue-rotate(6deg)}
 [data-theme="greek"] .card .ph{filter:saturate(.92) brightness(1.04)}
-.cbody{padding:14px 16px 12px;display:flex;flex-direction:column;gap:8px;flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.cbody{padding:14px 16px 12px;display:flex;flex-direction:column;gap:8px;flex:1;min-height:0;overflow:hidden}
 .meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:11px;color:var(--muted)}
 .badge{background:var(--accent);color:var(--accent-ink);padding:2px 8px;border-radius:999px;font-weight:800}.badge.oldb{background:var(--old)}
 .card h3{margin:0;font-size:clamp(17px,4.4vw,21px);line-height:1.45;font-family:var(--font-display);font-weight:700}
@@ -122,7 +122,6 @@ label.fl{display:block;font-weight:800;font-size:14px;margin:10px 0 4px}
 <section class="stage" id="stage" aria-live="polite"><div id="cardSlot"></div></section>
 
 <div class="pager"><div class="artdots" id="artDots"></div><span class="artcount" id="artCount"></span></div>
-<p class="hint">左スワイプで次の記事 ・ 右スワイプで前の記事 ・ 上スワイプで次のジャンル ・ 下スワイプで前のジャンル</p>
 <div class="addcat"><button id="addCatBtn">＋ 項目（ジャンル）を追加する</button></div>
 </main>
 
@@ -293,7 +292,25 @@ function renderStage(dir){
     +'<div class="src">出典：'+a[4]+'<br><a href="'+a[5]+'" target="_blank" rel="noopener">原文を開く</a></div></div></article>';
   document.getElementById('artDots').innerHTML=items.map((x,i)=>'<span class="dot'+(i===ai?' active':'')+'"></span>').join('');
   document.getElementById('artCount').textContent="記事 "+(ai+1)+" / "+items.length;
+  requestAnimationFrame(fitCard);
 }
+
+function fitCard(){
+  const card=document.querySelector('#cardSlot .card'); if(!card) return;
+  const body=card.querySelector('.cbody'); if(!body) return;
+  const sum=card.querySelector('.sum'), h3=card.querySelector('h3'), ph=card.querySelector('.ph');
+  let ss=14, hs=Math.min(21, Math.max(17, window.innerWidth*0.044)), phh=ph?Math.round(ph.getBoundingClientRect().height):0; const ph0=phh;
+  if(sum) sum.style.fontSize=ss+'px'; if(h3) h3.style.fontSize=hs+'px';
+  let guard=0;
+  while(body.scrollHeight>body.clientHeight+1 && guard<40){
+    guard++;
+    if(phh>76){ phh-=12; if(ph) ph.style.height=phh+'px'; continue; }
+    if(ss>10.5){ ss-=0.5; if(sum) sum.style.fontSize=ss+'px'; continue; }
+    if(hs>13){ hs-=0.5; if(h3) h3.style.fontSize=hs+'px'; continue; }
+    break;
+  }
+}
+window.addEventListener('resize', fitCard);
 function nextArt(){const n=curItems().length;if(!n)return;artIdxMap[curCat().id]=(curArtIdx()+1)%n;renderStage('next')}
 function prevArt(){const n=curItems().length;if(!n)return;artIdxMap[curCat().id]=(curArtIdx()-1+n)%n;renderStage('prev')}
 function nextCat(){catIdx=(catIdx+1)%cats.length;renderStage('down')}
