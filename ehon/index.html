@@ -39,7 +39,7 @@ h1{font-family:"Noto Serif JP",serif;font-size:22px;line-height:1.2;margin:2px 0
 .arrowDown:disabled:active{transform:none}
 .arrowLeft{left:4px}
 .arrowRight{right:4px}
-.arrowDown{position:static;transform:none;width:44px;height:44px;font-size:23px;padding:4px 0 0;animation:bob 1.9s ease-in-out infinite}
+.arrowSide{position:static;transform:none}.arrowSide:active{transform:scale(.9)}.arrowSide:disabled:active{transform:none}.arrowDown{position:static;transform:none;width:44px;height:44px;font-size:23px;padding:4px 0 0;animation:bob 1.9s ease-in-out infinite}
 .arrowDown:active{transform:scale(.9)}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
 @media (prefers-reduced-motion: reduce){.arrowDown{animation:none}}
@@ -108,13 +108,13 @@ textarea,input[type=text]{width:100%;border:1px solid var(--line);border-radius:
 <a class="btn" id="sourceBtn" href="#" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center">公式・出典を見る</a>
 </div>
 </article>
-<button class="arrowBtn arrowLeft" id="prevArtBtn" type="button" aria-label="前の記事">‹</button>
-<button class="arrowBtn arrowRight" id="nextArtBtn" type="button" aria-label="次の記事">›</button>
+
+
 </div>
 
 <div class="nav">
 <div class="progress"><b id="catName"></b><br><span id="posLabel"></span></div>
-<button class="arrowBtn arrowDown" id="nextCatBtn" type="button" aria-label="次のジャンル">⌄</button>
+<button class="arrowBtn arrowSide" id="prevArtBtn" type="button" aria-label="前の記事">‹</button> <button class="arrowBtn arrowDown" id="nextCatBtn" type="button" aria-label="次のジャンル">⌄</button> <button class="arrowBtn arrowSide" id="nextArtBtn" type="button" aria-label="次の記事">›</button>
 <button class="addLink" id="addCatBtn" type="button">＋ 項目を追加</button>
 </div>
 </div>
